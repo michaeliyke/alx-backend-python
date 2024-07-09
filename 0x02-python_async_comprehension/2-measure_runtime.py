@@ -11,6 +11,10 @@ async_comprehension: Coroutine[None, None, List[float]] =\
 async def measure_runtime() -> float:
     """Measure runtime of async_comprehension coroutine"""
     start = time.time()
-    await asyncio.gather(*[async_comprehension() for _ in range(4)])
-    end = time.time()
-    return end - start
+    await asyncio.gather(
+        async_comprehension(),
+        async_comprehension(),
+        async_comprehension(),
+        async_comprehension()
+    )
+    return time.time() - start
