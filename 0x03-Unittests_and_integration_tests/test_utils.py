@@ -12,6 +12,26 @@ from utils import (
 )
 
 
+class TestGetJson(unittest.TestCase):
+    """Testing get_json."""
+
+    @parameterized.expand([
+        ("http://example.com", {"payload": True}),
+        ("http://holberton.io", {"payload": False}),
+    ])
+    @patch("utils.requests")
+    def test_get_json(self, url, expected, mock_requests):
+        """Test get_json returns the right value.
+        NOTE:
+        mock_requests: comes from the patch decorator utils.requests import
+        """
+        mock_response = Mock()
+        mock_requests.get.return_value = mock_response
+        mock_response.json.return_value = expected
+
+        self.assertEqual(get_json(url), expected)
+
+
 class TestAccessNestedMap(unittest.TestCase):
     """Testing access_nested_map."""
 
@@ -19,7 +39,6 @@ class TestAccessNestedMap(unittest.TestCase):
         ({"a": 1}, ("a",), 1),
         ({"a": {"b": 2}}, ("a",), {"b": 2}),
         ({"a": {"b": 2}}, ("a", "b"), 2),
-        # ({"a": {"b": {"c": 1}}}, ("a", "b", "c"), 1),
     ])
     def test_access_nested_map(self, nested_map, path, expected):
         """Test access_nested_map returns the right value."""
